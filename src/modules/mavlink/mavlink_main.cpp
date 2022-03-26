@@ -679,7 +679,7 @@ Mavlink::mavlink_open_uart(const int baud, const char *uart_name, const bool for
 	*/
 
 	/* setup output flow control */
-	if (enable_flow_control(force_flow_control ? FLOW_CONTROL_ON : FLOW_CONTROL_AUTO)) {
+	if (enable_flow_control(force_flow_control ? FLOW_CONTROL_ON : FLOW_CONTROL_OFF)) {
 		PX4_WARN("hardware flow control not supported");
 	}
 
