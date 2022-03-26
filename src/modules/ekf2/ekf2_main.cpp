@@ -1191,7 +1191,7 @@ void Ekf2::Run()
 			ev_data.time_us = _ev_odom.timestamp_sample;
 			_ekf.setExtVisionData(ev_data);
 
-			ekf2_timestamps.visual_odometry_timestamp_rel = (int16_t)((int64_t)_ev_odom.timestamp / 100 -
+			ekf2_timestamps.visual_odometry_timestamp_rel = (int16_t)((int64_t)_ev_odom.timestamp_sample / 100 -
 					(int64_t)ekf2_timestamps.timestamp / 100);
 
 						if (ev_data_first_present == 0){
@@ -1207,9 +1207,17 @@ void Ekf2::Run()
 
 			if (ev_data_last_present - ev_data_first_present >= 5e5){ // 500ms stable stream
 
-				if (!ev_data_prescent)
+				// if (!ev_data_prescent)
 
+				static uint64_t present_count = 0;
+
+				present_count++;
+
+				if (present_count % 100 == 1){
 					mavlink_log_warning(&mavlink_log_pub, "EKF2 EV Stream Slack %d ms", ekf2_timestamps.visual_odometry_timestamp_rel/10 );
+					mavlink_log_warning(&mavlink_log_pub, "EKF2 EV Stream sample - now %lld us", (int64_t)_ev_odom.timestamp_sample - (int64_t)_ev_odom.timestamp  );
+				}
+
 
 				ev_data_prescent = true;
 
